@@ -67,7 +67,6 @@ def main() -> None:
 		writer.writeheader()
 
 		for data in DATA_LIST:
-			print(data)
 			writer.writerow(data)
 	print("[+] File written successfully!")
 
