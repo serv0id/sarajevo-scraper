@@ -1,5 +1,5 @@
 # sarajevo-scraper
-A basic scraper for Sarajevo Film Festival made for a friend which outputs information in an excel supported CSV format.
+A basic scraper for Sarajevo Film Festival 2023 (https://www.sff.ba/) made for a friend which outputs information in an excel supported CSV format.
 
 ### Usage
 `python main.py range`
