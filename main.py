@@ -21,7 +21,7 @@ class CsvScraper(object):
 		parsed_dict = {
 			"URL": f"https://tickets.sff.ba/films/{self.movie_id}",
 			"Title": s_info["title"],
-			"Year": s_info["completionYear"],
+			"Year": s_info["completionYear"] if s_info.get("completionYear") is not None else "",
 			"Countries": s_info["countriesCsv"],
 			"Runtime": s_info["runtimeHumanReadable"],
 			"Languages": s_info["languagesCsv"],
