@@ -2,8 +2,11 @@
 
 import sys
 import config
+from typing import Union
 import requests, json
 import csv
+
+NoneType = type(None)
 
 class CsvScraper(object):
 	def __init__(self, movie_id: int):
@@ -17,31 +20,44 @@ class CsvScraper(object):
 		'''
 		s = self.session.get(url=config.INFO_URL.format(self.movie_id))
 		s_info = s.json()
+
+		parse_field = lambda field: s_info[field] if s_info.get(field) is not None else " "
 		
 		parsed_dict = {
 			"URL": f"https://tickets.sff.ba/films/{self.movie_id}",
-			"Title": s_info["title"],
-			"Year": s_info["completionYear"] if s_info.get("completionYear") is not None else "",
-			"Countries": s_info["countriesCsv"],
-			"Runtime": s_info["runtimeHumanReadable"],
-			"Languages": s_info["languagesCsv"],
-			"Poster URL": s_info["poster"] if s_info.get("poster") is not None else "",
+			"Title": parse_field("title"),
+			"Year": parse_field("completionYear"),
+			"Countries": parse_field("countriesCsv"),
+			"Runtime": parse_field("runtimeHumanReadable"),
+			"Languages": parse_field("languagesCsv"),
+			"Poster URL": parse_field("poster"),
 			"Screening Date": self.get_screening_details(),
-			"Category": s_info["filmProgrammes"][0]
+			"Category": parse_field("filmProgrammes")[0]
 			}
 
-		for field in s_info["filmCrew"]:
-			if field["crewTypeName"] == "director":
-				parsed_dict["Director(s)"] = field["crewMembersCsv"]
-			elif field["crewTypeName"] == "writer":
-				parsed_dict["Writer(s)"] = field["crewMembersCsv"]
+		if s_info.get("filmCrew") is not None:
+			for field in s_info["filmCrew"]:
+				if field["crewTypeName"] == "director":
+					parsed_dict["Director(s)"] = field["crewMembersCsv"]
+				elif field["crewTypeName"] == "writer":
+					parsed_dict["Writer(s)"] = field["crewMembersCsv"]
 
 		return parsed_dict
 
-	def get_screening_details(self) -> str:
+	def get_screening_details(self) -> Union[str, NoneType]:
+		'''
+		Retrieve screening date from the screening 
+		endpoint.
+		'''
 		s = self.session.get(url=config.SCREENING_URL.format(self.movie_id)).json()
 
-		return s["data"][0]["startTime"].split('T')[0]
+		try:
+			date = s["data"][0]["startTime"].split('T')[0]
+		except:
+			print("[-] Date not found!")
+			date = None
+
+		return date
 
 
 def main() -> None:
