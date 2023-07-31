@@ -26,7 +26,8 @@ class CsvScraper(object):
 			"Runtime": s_info["runtimeHumanReadable"],
 			"Languages": s_info["languagesCsv"],
 			"Poster URL": s_info["poster"] if s_info.get("poster") is not None else "",
-			"Screening Date": self.get_screening_details()
+			"Screening Date": self.get_screening_details(),
+			"Category": s_info["filmProgrammes"][0]
 			}
 
 		for field in s_info["filmCrew"]:
@@ -53,7 +54,7 @@ def main() -> None:
 		sys.exit(0)
 
 	FIELD_HEADINGS = ["URL", "Title", "Year", "Countries", "Runtime", "Languages",
-					  "Poster URL", "Screening Date", "Director(s)", "Writer(s)"]																
+					  "Poster URL", "Screening Date", "Category", "Director(s)", "Writer(s)"]																
 	
 	DATA_LIST = []
 	
