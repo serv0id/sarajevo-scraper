@@ -32,7 +32,7 @@ class CsvScraper(object):
 			"Languages": parse_field("languagesCsv"),
 			"Poster URL": parse_field("poster"),
 			"Screening Date": self.get_screening_details(),
-			"Category": parse_field("filmProgrammes")[0]
+			"Category": parse_field("filmProgrammes")
 			}
 
 		if s_info.get("filmCrew") is not None:
